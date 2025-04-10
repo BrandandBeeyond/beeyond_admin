@@ -62,6 +62,25 @@ const Manage = () => {
       {
         Header: 'Action',
         accessor: 'action',
+        Cell: ({ row }) => {
+    const currentStatus = row.orderStatus;
+    const orderId = row.original._id;
+
+    return (
+      <select
+        value={currentStatus}
+        onChange={(e) => handleStatusChange(orderId, e.target.value)}
+        className="form-select"
+        disabled={currentStatus === "Delivered" || currentStatus === "Cancelled"}
+      >
+        <option value="Processing">Processing</option>
+        <option value="Shipped">Shipped</option>
+        <option value="Out for Delivery">Out for Delivery</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+    );
+  },
       },
     ],
     []
