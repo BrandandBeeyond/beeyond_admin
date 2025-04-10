@@ -13,7 +13,7 @@ export const MENU_ITEMS = [{
   url: '/dashboard'
 }, {
   key: 'apps',
-  label: 'App',
+  label: 'Users',
   isTitle: true
 }, {
   key: 'apps-calendar',
@@ -42,67 +42,24 @@ export const MENU_ITEMS = [{
   }]
 }, {
   key: 'extra-pages',
-  label: 'Extra Pages',
+  label: 'Orders',
   isTitle: true
 }, {
   key: 'pages',
-  label: 'Pages',
+  label: 'manage',
   isTitle: false,
   icon: 'ri:stack-line',
   children: [{
-    key: 'page-starter',
-    label: 'Starter Page',
-    url: '/pages/starter',
-    parentKey: 'pages'
-  }, {
     key: 'page-contact',
-    label: 'Contact List',
-    url: '/pages/contacts',
+    label: 'Manage order',
+    url: '/pages/manageorders',
     parentKey: 'pages'
   }, {
     key: 'page-profile',
-    label: 'Profile',
+    label: 'Orders delivered',
     url: '/pages/profile',
     parentKey: 'pages'
-  }, {
-    key: 'page-timeline',
-    label: 'Timeline',
-    url: '/pages/timeline',
-    parentKey: 'pages'
-  }, {
-    key: 'page-faqs',
-    label: 'FAQ',
-    url: '/pages/faqs',
-    parentKey: 'pages'
-  }, {
-    key: 'page-pricing',
-    label: 'Pricing',
-    url: '/pages/pricing',
-    parentKey: 'pages'
-  }, {
-    key: 'page-maintenance',
-    label: 'Maintenance',
-    url: '/maintenance',
-    parentKey: 'pages',
-    target: '_blank'
-  }, {
-    key: 'page-404-error',
-    label: 'Error 404',
-    url: '/error-404',
-    parentKey: 'pages',
-    target: '_blank'
-  }, {
-    key: 'page-error-404-alt',
-    label: 'Error 404 Alt',
-    url: '/pages/error-404-alt',
-    parentKey: 'pages'
-  }, {
-    key: 'page-500',
-    label: 'Error 500',
-    url: '/error-500',
-    parentKey: 'pages',
-    target: '_blank'
-  }]
+  }, ]
 }, {
   key: 'page-authentication',
   label: 'Authentication',

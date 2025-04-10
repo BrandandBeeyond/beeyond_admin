@@ -23,7 +23,7 @@ const FAQPages = lazy(() => import('@/app/(admin)/pages/faqs/page'));
 const PricingPages = lazy(() => import('@/app/(admin)/pages/pricing/page'));
 const MaintenancePages = lazy(() => import('@/app/(other)/maintenance/page'));
 const StarterPages = lazy(() => import('@/app/(admin)/pages/starter/page'));
-const ContactListPages = lazy(() => import('@/app/(admin)/pages/contacts/page'));
+const ManageOrder = lazy(() => import('@/app/(admin)/pages/manageorders/Manage'));
 const TimelinePages = lazy(() => import('@/app/(admin)/pages/timeline/page'));
 
 // base ui
@@ -144,9 +144,9 @@ const customPagesRoutes = [{
   name: 'Starter Page',
   element: <StarterPages />
 }, {
-  path: '/pages/contacts',
+  path: '/pages/manageorders',
   name: 'Contact List',
-  element: <ContactListPages />
+  element: <ManageOrder />
 }, {
   path: '/pages/timeline',
   name: 'Timeline',
