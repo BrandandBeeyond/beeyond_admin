@@ -1,20 +1,26 @@
-import React, { useEffect } from 'react';
-import { Card, CardBody, CardHeader, Col, Row } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { getOrders } from '../../../../redux/actions/OrderAction';
-import { useTable } from 'react-table';
-import { Link } from 'react-router-dom'; // Import Link for hyperlink functionality
+import React, { useEffect } from 'react'
+import { Card, CardBody, CardHeader, Col, Row } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { getOrders, updateOrderStatus } from '../../../../redux/actions/OrderAction'
+import { useTable } from 'react-table'
+import { Link } from 'react-router-dom' // Import Link for hyperlink functionality
+import Dropdown from 'react-bootstrap/Dropdown'
 
 const Manage = () => {
-  const dispatch = useDispatch();
-  const { orders } = useSelector((state) => state.orders);
-  console.log(orders);
-  
-  const { loading, error } = useSelector((state) => state.orders); // Optional: handling loading and errors
+  const dispatch = useDispatch()
+  const { orders } = useSelector((state) => state.orders)
+  console.log(orders)
+
+  const { loading, error } = useSelector((state) => state.orders) // Optional: handling loading and errors
+
+  const handleStatusChange=async(orderId,newStatus)=>{
+     await dispatch(updateOrderStatus(orderId,newStatus));
+     dispatch(getOrders())
+  }
 
   useEffect(() => {
-    dispatch(getOrders());
-  }, [dispatch]);
+    dispatch(getOrders())
+  }, [dispatch])
 
   // Columns configuration for react-table
   const columns = React.useMemo(
@@ -40,14 +46,11 @@ const Manage = () => {
         Header: 'Order Date',
         accessor: 'paidAt',
         Cell: ({ value }) => {
-          const date = new Date(value);
-          const months = [
-            "January", "February", "March", "April", "May", "June", "July", 
-            "August", "September", "October", "November", "December"
-          ];
-          const day = date.getDate();
-          const month = months[date.getMonth()];
-          return `${day} ${month}`;
+          const date = new Date(value)
+          const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+          const day = date.getDate()
+          const month = months[date.getMonth()]
+          return `${day} ${month}`
         },
       },
       {
@@ -55,52 +58,57 @@ const Manage = () => {
         accessor: 'orderStatus',
         Cell: ({ value }) => {
           // Conditionally apply the Bootstrap class based on status
-          const statusClass = value === 'Paid' ? 'text-success' : 'text-success';
-          return <span className={statusClass}>{value}</span>;
+          const statusClass = value === 'Paid' ? 'text-success' : 'text-success'
+          return <span className={statusClass}>{value}</span>
         },
       },
       {
         Header: 'Action',
         accessor: 'action',
         Cell: ({ row }) => {
-    const currentStatus = row.orderStatus;
-    const orderId = row.original._id;
+          const currentStatus = row.original.orderStatus
+          const orderId = row.original._id
 
-    return (
-      <select
-        value={currentStatus}
-        onChange={(e) => handleStatusChange(orderId, e.target.value)}
-        className="form-select"
-        disabled={currentStatus === "Delivered" || currentStatus === "Cancelled"}
-      >
-        <option value="Processing">Processing</option>
-        <option value="Shipped">Shipped</option>
-        <option value="Out for Delivery">Out for Delivery</option>
-        <option value="Delivered">Delivered</option>
-        <option value="Cancelled">Cancelled</option>
-      </select>
-    );
-  },
+          return (
+            <Dropdown>
+              <Dropdown.Toggle variant="secondary" size="sm" disabled={currentStatus === 'Delivered' || currentStatus === 'Cancelled'}>
+                Change Status
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu size="sm">
+                {currentStatus === 'Processing' && (
+                  <Dropdown.Item onClick={() => handleStatusChange(orderId, 'Shipped')}>Proceed to Ship</Dropdown.Item>
+                )}
+                {currentStatus === 'Shipped' && (
+                  <Dropdown.Item onClick={() => handleStatusChange(orderId, 'Out for Delivery')}>Proceed to Delivery</Dropdown.Item>
+                )}
+                {currentStatus === 'Out for Delivery' && (
+                  <Dropdown.Item onClick={() => handleStatusChange(orderId, 'Delivered')}>Mark Delivered</Dropdown.Item>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          )
+        },
       },
     ],
-    []
-  );
+    [],
+  )
 
   // Initialize react-table with data and columns
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data: orders,
-  });
+  })
 
-  const sizePerPageList = [2, 5, 10, 20, 50];
+  const sizePerPageList = [2, 5, 10, 20, 50]
 
   // Show loading state or error message if data is not loaded yet
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error}</div>
   }
 
   return (
@@ -127,7 +135,7 @@ const Manage = () => {
                 </thead>
                 <tbody {...getTableBodyProps()}>
                   {rows.map((row, rowIndex) => {
-                    prepareRow(row);
+                    prepareRow(row)
                     return (
                       <tr key={rowIndex} {...row.getRowProps()}>
                         {row.cells.map((cell, cellIndex) => (
@@ -136,7 +144,7 @@ const Manage = () => {
                           </td>
                         ))}
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
               </table>
@@ -145,7 +153,7 @@ const Manage = () => {
         </Col>
       </Row>
     </>
-  );
-};
+  )
+}
 
-export default Manage;
+export default Manage
