@@ -2,7 +2,7 @@
 import {
   AppstoreAddOutlined,
   AntDesignOutlined,
-  ProductOutlined,
+  DatabaseOutlined,
   BgColorsOutlined,
   FontSizeOutlined,
   LoadingOutlined
@@ -12,7 +12,7 @@ import {
 const icons = {
   FontSizeOutlined,
   BgColorsOutlined,
-  ProductOutlined,
+  DatabaseOutlined,
   AntDesignOutlined,
   LoadingOutlined,
   AppstoreAddOutlined
@@ -30,7 +30,7 @@ const orders = {
       title: 'Manage Orders',
       type: 'item',
       url: '/orders',
-      icon: icons.ProductOutlined
+      icon: icons.DatabaseOutlined
     }
   ]
 };

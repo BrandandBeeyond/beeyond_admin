@@ -11,6 +11,7 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/default')))
 const Color = Loadable(lazy(() => import('pages/component-overview/color')));
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
 const ManageOrders = Loadable(lazy(() => import('pages/component-overview/manageorders')));
+const ManageProducts = Loadable(lazy(() => import('pages/component-overview/manageproducts')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
@@ -39,8 +40,8 @@ const MainRoutes = {
       element: <Typography />
     },
     {
-      path: 'color',
-      element: <Color />
+      path: 'products',
+      element: <ManageProducts />
     },
     {
       path: 'orders',
