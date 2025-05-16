@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Link } from 'react-router-dom';
 
-// material-ui
-import { useTheme } from '@mui/material/styles';
+// MUI
 import {
   Grid,
-  Stack,
   Typography,
   Box,
   Table,
@@ -17,24 +14,26 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  MenuItem,
-  Select,
-  FormControl
+  Button,
+  Menu,
+  MenuItem
 } from '@mui/material';
 
-// project imports
+// Project imports
 import MainCard from 'components/MainCard';
 import { getOrders, updateOrderStatus } from '../../redux/actions/OrderAction';
 
+// Table headers
 const headCells = [
   { id: 'name', align: 'left', label: 'User Name' },
   { id: 'orderNumber', align: 'left', label: 'Order Number' },
   { id: 'paymentStatus', align: 'left', label: 'Payment Status' },
   { id: 'orderDate', align: 'left', label: 'Order Date' },
   { id: 'orderStatus', align: 'left', label: 'Order Status' },
-  { id: 'action', align: 'left', label: 'Action' }
+  { id: 'changeStatus', align: 'left', label: 'Change Status' }
 ];
 
+// Table head component
 function OrderTableHead() {
   return (
     <TableHead>
@@ -49,16 +48,28 @@ function OrderTableHead() {
   );
 }
 
+// Main component
 export default function ComponentShadow() {
   const dispatch = useDispatch();
   const { orders, loading, error } = useSelector((state) => state.orders);
+
+  const [anchorEls, setAnchorEls] = useState({}); // Store anchor per order
 
   useEffect(() => {
     dispatch(getOrders());
   }, [dispatch]);
 
-  const handleStatusChange = async (orderId, newStatus) => {
+  const handleMenuOpen = (event, orderId) => {
+    setAnchorEls((prev) => ({ ...prev, [orderId]: event.currentTarget }));
+  };
+
+  const handleMenuClose = (orderId) => {
+    setAnchorEls((prev) => ({ ...prev, [orderId]: null }));
+  };
+
+  const handleStatusUpdate = async (orderId, newStatus) => {
     await dispatch(updateOrderStatus(orderId, newStatus));
+    handleMenuClose(orderId);
     dispatch(getOrders());
   };
 
@@ -78,25 +89,18 @@ export default function ComponentShadow() {
       'November',
       'December'
     ];
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    return `${day} ${month}`;
+    return `${date.getDate()} ${months[date.getMonth()]}`;
   };
 
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <MainCard
-          sx={{
-            width: '100%',
-            overflow: 'hidden'
-          }}
-        >
+      <Grid span={12}>
+        <MainCard sx={{ width: '100%', overflow: 'hidden' }}>
           <Box sx={{ width: '100%' }}>
             <TableContainer
               sx={{
-                width: '100vw', // Full viewport width
-                marginLeft: '-24px', // Adjust if MainCard has padding
+                width: '80vw',
+                marginLeft: '-24px',
                 marginRight: '-24px',
                 overflowX: 'auto',
                 '& td, & th': { whiteSpace: 'nowrap' }
@@ -112,6 +116,10 @@ export default function ComponentShadow() {
                   ) : error ? (
                     <TableRow>
                       <TableCell colSpan={6}>Error: {error}</TableCell>
+                    </TableRow>
+                  ) : orders.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6}>No orders found</TableCell>
                     </TableRow>
                   ) : (
                     orders.map((order) => (
@@ -131,16 +139,31 @@ export default function ComponentShadow() {
                         </TableCell>
                         <TableCell>
                           {order.orderStatus !== 'Delivered' && order.orderStatus !== 'Cancelled' ? (
-                            <FormControl size="small" fullWidth>
-                              <Select value="" displayEmpty onChange={(e) => handleStatusChange(order._id, e.target.value)}>
-                                <MenuItem disabled value="">
-                                  Change Status
+                            <>
+                              <Button variant="outlined" size="small" onClick={(e) => handleMenuOpen(e, order._id)}>
+                                Change Status
+                              </Button>
+                              <Menu
+                                anchorEl={anchorEls[order._id]}
+                                open={Boolean(anchorEls[order._id])}
+                                onClose={() => handleMenuClose(order._id)}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                              >
+                                {order.orderStatus === 'Processing' && (
+                                  <MenuItem onClick={() => handleStatusUpdate(order._id, 'Shipped')}>Proceed to Ship</MenuItem>
+                                )}
+                                {order.orderStatus === 'Shipped' && (
+                                  <MenuItem onClick={() => handleStatusUpdate(order._id, 'Out for Delivery')}>Proceed to Delivery</MenuItem>
+                                )}
+                                {order.orderStatus === 'Out for Delivery' && (
+                                  <MenuItem onClick={() => handleStatusUpdate(order._id, 'Delivered')}>Mark Delivered</MenuItem>
+                                )}
+                                <MenuItem onClick={() => handleStatusUpdate(order._id, 'Cancelled')} style={{ color: 'red' }}>
+                                  Cancel Order
                                 </MenuItem>
-                                {order.orderStatus === 'Processing' && <MenuItem value="Shipped">Proceed to Ship</MenuItem>}
-                                {order.orderStatus === 'Shipped' && <MenuItem value="Out for Delivery">Proceed to Delivery</MenuItem>}
-                                {order.orderStatus === 'Out for Delivery' && <MenuItem value="Delivered">Mark Delivered</MenuItem>}
-                              </Select>
-                            </FormControl>
+                              </Menu>
+                            </>
                           ) : (
                             <Typography variant="body2" color="text.secondary">
                               No Action
