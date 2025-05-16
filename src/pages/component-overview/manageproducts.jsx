@@ -83,12 +83,12 @@ const Manageproducts = () => {
                   ) : (
                     products.map((product) => (
                       <TableRow key={product._id}>
-                        <TableCell>{product.name}</TableCell> {/* product title */}
-                        <TableCell>{product.description}</TableCell> {/* description */}
-                        <TableCell>{product.category}</TableCell> {/* category */}
-                        <TableCell>₹{product.price}</TableCell> {/* price */}
+                        <TableCell>{product.name}</TableCell>
+                        <TableCell>{product.description}</TableCell>
+                        <TableCell>{product.category}</TableCell>
+                        <TableCell>₹{product.price}</TableCell>
                         <TableCell>
-                          <img src={product.image} alt={product.name} width="60" height="60" style={{ objectFit: 'cover' }} />
+                          <img src={{uri:product.image[0].url}} alt={product.name} width="60" height="60" style={{ objectFit: 'cover' }} />
                         </TableCell>{' '}
                         {/* image */}
                         <TableCell>
