@@ -10,7 +10,8 @@ import {
   TableRow,
   Button,
   Menu,
-  MenuItem
+  MenuItem,
+  Card
 } from '@mui/material';
 
 // Project imports
@@ -18,6 +19,7 @@ import MainCard from 'components/MainCard';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllProducts } from '../../redux/actions/ProductAction';
+import { useNavigate } from 'react-router';
 
 const headCells = [
   { id: 'product title', align: 'left', label: 'product title' },
@@ -44,6 +46,7 @@ function OrderTableHead() {
 
 const Manageproducts = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { products, loading, error } = useSelector((state) => state.products);
 
   useEffect(() => {
@@ -72,27 +75,23 @@ const Manageproducts = () => {
                     <TableRow>
                       <TableCell colSpan={6}>Loading...</TableCell>
                     </TableRow>
-                  ) : error ? (
-                    <TableRow>
-                      <TableCell colSpan={6}>Error: {error}</TableCell>
-                    </TableRow>
-                  ) : products.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6}>No products found</TableCell>
-                    </TableRow>
-                  ) : (
+                  )  : (
                     products.map((product) => (
                       <TableRow key={product._id}>
                         <TableCell>{product.name}</TableCell>
-                        <TableCell>{product.description}</TableCell>
-                        <TableCell>{product.category}</TableCell>
+                        <TableCell>
+                          <Card sx={{ padding: '10px', backgroundColor: '#f5f5f5',width: '500px',textWrap:'wrap' }}>
+                          {product.description}
+                          </Card>
+                        </TableCell>
+                        <TableCell sx={{fontWeight:'600'}}>{product.category}</TableCell>
                         <TableCell>₹{product.price}</TableCell>
                         <TableCell>
                           <img src={product.images[0].url} alt={product.name} width="60" height="60" style={{ objectFit: 'cover' }} />
                         </TableCell>{' '}
                         {/* image */}
                         <TableCell>
-                          <Button variant="contained" size="small" color="primary" sx={{ mr: 1 }}>
+                          <Button variant="contained" size="small" color="primary" sx={{ mr: 1 }} onClick={()=>navigate('/editproducts')}>
                             Edit
                           </Button>
                           <Button variant="outlined" size="small" color="error">

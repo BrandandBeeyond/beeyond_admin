@@ -12,6 +12,7 @@ const Color = Loadable(lazy(() => import('pages/component-overview/color')));
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
 const ManageOrders = Loadable(lazy(() => import('pages/component-overview/manageorders')));
 const ManageProducts = Loadable(lazy(() => import('pages/component-overview/manageproducts')));
+const EditProducts = Loadable(lazy(() => import('pages/component-overview/editproducts')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
@@ -42,6 +43,10 @@ const MainRoutes = {
     {
       path: 'products',
       element: <ManageProducts />
+    },
+    {
+      path: 'editproducts',
+      element: <EditProducts />
     },
     {
       path: 'orders',
