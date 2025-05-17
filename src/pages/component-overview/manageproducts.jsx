@@ -88,7 +88,7 @@ const Manageproducts = () => {
                         <TableCell>{product.category}</TableCell>
                         <TableCell>₹{product.price}</TableCell>
                         <TableCell>
-                          <img src={{uri:product.image[0].url}} alt={product.name} width="60" height="60" style={{ objectFit: 'cover' }} />
+                          <img src={product.images[0].url} alt={product.name} width="60" height="60" style={{ objectFit: 'cover' }} />
                         </TableCell>{' '}
                         {/* image */}
                         <TableCell>
